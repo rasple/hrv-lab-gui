@@ -1,0 +1,27 @@
+#brand-navbar-wrapper { 
+    max-height: 40px;
+    max-width: 30%; 
+    overflow: visible;
+    padding-top: 0;
+    padding-bottom: 0; 
+}
+
+#timer {
+font-size: 5em;
+}
+body {
+    background-color: #b1b1b1;
+}
+textarea {
+    resize:none;
+}
+
+#mainContainer {
+
+    padding: 3em;
+}
+
+.form-control {
+    resize: none;
+    background: #d1d1d1;
+}

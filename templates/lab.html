@@ -1,0 +1,175 @@
+<head>
+  <title>HRV-Labor</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/bootstrap.min.css') }}" crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" crossorigin="anonymous">
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #333333;">
+    <a class="navbar-brand" href="/">
+      <img src="{{url_for('static', filename='images/dhbw-logo-very-low-res-no-text.png')}}" width="30" height="30">
+      EMF-Lab
+    </a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Lab</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/settings">Settings</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Information
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/information#tutorial">Tutorial</a>
+            <a class="dropdown-item" href="/information#faq">F.A.Q.</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/imprint">Imprint</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container" id="mainContainer">
+    <div class="row">
+      <div class="col-md-6">
+        <form id="form" class="needs-validation" novalidate>
+          <div class="form-row">
+            <div class="col">
+                <div class="form-group">
+              <label for="weight">Weight</label>
+              <input id="weight" type="text" class="form-control" placeholder="Weight" pattern="\d\d?[\.\d+]?" required>
+              </div>
+              <small class="form-text text-muted">Please use . (dot) instead of , (comma) for decimals</small>
+            </div>
+            <div class="col">
+                <div class="form-group">
+              <label for="height">Height</label>
+              <input id="height" type="text" class="form-control" placeholder="Height" pattern="\d\d?[\.\d+]?" required>
+            </div>
+            
+            </div>
+            
+          </div>
+          <div class="form-row">
+            <div class="col">
+                <div class="form-group">
+              <label for="age">Age</label>
+              <input id="age" type="text" class="form-control" pattern="\d\d?" placeholder="Age" required>
+              </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+              <label for="sex">Sex</label>
+              <select id="sex" class="form-control" placeholder="Sex" required>
+                <option>Male</option>
+                <option>Female</option>
+              </select>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" action="submit" id="startButton">Start</button>
+          <button class="btn btn-danger" onclick="stop()" id="stopButton" style="visibility:hidden">Stop</button>
+        </form>
+      </div>
+      <div class="col-md-4">
+        <table id="table" class="table table-dark" style="background-color: #666666;">
+          <thead>
+            <tr style="background-color: #333333;">
+              <th scope="col">Device</th>
+              <th scope="col">Status</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Wifi-Router</th>
+              <td>
+                <div id="wifi-status">
+                </div>
+              </td>
+
+            </tr>
+            <tr>
+              <th scope="row">Dect-Basisstation</th>
+              <td>
+                <div id="dect-status">
+                </div>
+              </td>
+
+            </tr>
+            <tr>
+              <th scope="row">Franks-Laptop</th>
+              <td>
+                <div id="archpad-status">
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" class="btn btn-danger" onclick="ping()" id="refreshButton">Check</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="container">
+          <label for="timer">Time remaining</label>
+          <div id="timer">
+            12:00
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="comment">Log</label>
+          <textarea class="form-control" rows="5" id="comment" disabled></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="exportFile()" id="startButton">Export</button>
+        <button class="btn btn-danger" onclick="clear()" id="startButton">Clear</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+<script src="{{ url_for('static', filename='js/jquery/jquery-3.3.1.min.js') }}/" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='js/popper/popper.min.js') }}" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='js/bootstrap/bootstrap.bundle.min.js') }}" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}" crossorigin="anonymous"></script>
+
+<script>$(document).ready(function () {
+    
+  ping()
+
+    $('.needs-validation').submit(function(e){
+      e.preventDefault()
+      e.stopPropagation()
+      if ($('.needs-validation')[0].checkValidity() === true){
+        $.ajax({
+          url:'/start',
+          type:'post',
+          data:$('.needs-validation').serialize(),
+          success:function(){
+            form.classList.add('was-validated');
+            $('#startButton').setDisabled(true)
+            $('#stopButton').css('visbility', 'visible')
+            $( "input" ).prop( "disabled", true )
+          }
+      });
+      }
+      
+  });
+    
+  })</script>

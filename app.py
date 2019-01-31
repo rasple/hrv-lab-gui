@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, send_from_directory, url_for
+from flask import Flask, request, jsonify, render_template, send_from_directory, url_for, Response
 from platform   import system as system_name
 from subprocess import call   as system_call
 import os
@@ -42,9 +42,10 @@ def information_page():
 
 # Business stuff
  
-@app.route('/start')
+@app.route('/start', methods=['POST'])
 def start():
-    pass
+    print(dumps(request.form))
+    return Response(status=200)
 
 @app.route('/abort')
 def abort():
@@ -53,7 +54,7 @@ def abort():
 @app.route('/time')
 def time():
     pass
-    
+
 @app.route('/ping')
 def ping_response():
     return jsonify({'raspi' : ping(Settings().load()['raspi_ip']['value']),

@@ -44,7 +44,7 @@
   </nav>
   <div class="container" style="margin-top:20px">
     <div class="col-md-6">
-    <form id="form" class="needs-validation" action="settings" method="POST" novalidate>
+    <form id="form" class="needs-validation" action="settings" method="POST">
       {% for k, v in settings.items() %}
 
       <label for="{{k}}">{{v.name}}</label>

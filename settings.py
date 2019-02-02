@@ -28,7 +28,7 @@ class Settings:
 
     def reset(self):
         print('Deleting save')
-        remove('settings.conf')
+        remove(self.SETTINGS_LOCATION)
 
     def write(
         self,

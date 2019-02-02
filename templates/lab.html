@@ -49,14 +49,14 @@
             <div class="col">
                 <div class="form-group">
               <label for="weight">Weight</label>
-              <input id="weight" type="text" class="form-control" placeholder="Weight" pattern="\d\d?[\.\d+]?" required>
+              <input id="weight" type="text" name="weight" class="form-control" placeholder="Weight" pattern="\d\d?[\.\d+]?" required>
               </div>
               <small class="form-text text-muted">Please use . (dot) instead of , (comma) for decimals</small>
             </div>
             <div class="col">
                 <div class="form-group">
               <label for="height">Height</label>
-              <input id="height" type="text" class="form-control" placeholder="Height" pattern="\d\d?[\.\d+]?" required>
+              <input id="height" type="text" name="height" class="form-control" placeholder="Height" pattern="\d\d?[\.\d+]?" required>
             </div>
             
             </div>
@@ -66,13 +66,13 @@
             <div class="col">
                 <div class="form-group">
               <label for="age">Age</label>
-              <input id="age" type="text" class="form-control" pattern="\d\d?" placeholder="Age" required>
+              <input id="age" type="text" name="age" class="form-control" pattern="\d\d?" placeholder="Age" required>
               </div>
             </div>
             <div class="col">
                 <div class="form-group">
               <label for="sex">Sex</label>
-              <select id="sex" class="form-control" placeholder="Sex" required>
+              <select id="sex" name="sex" class="form-control" placeholder="Sex" required>
                 <option>Male</option>
                 <option>Female</option>
               </select>
@@ -133,11 +133,17 @@
       </div>
       <div class="col-md-6">
         <div class="form-group">
-          <label for="comment">Log</label>
+          <label for="comment">Protocol</label>
           <textarea class="form-control" rows="5" id="comment" disabled></textarea>
         </div>
         <button class="btn btn-primary" onclick="exportFile()" id="startButton">Export</button>
         <button class="btn btn-danger" onclick="clear()" id="startButton">Clear</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-10">
+          <label for="comment">Log</label>
+          <textarea class="form-control" rows="5" id="comment" disabled></textarea>
       </div>
     </div>
   </div>

@@ -33,7 +33,8 @@ class Protocol:
             remove(self.PROTOCOL_LOCATION)
         finally:
             self.mutex.release()
-    def append(self, line):
+            
+    def print(self, line):
         self.mutex.acquire()
         try:
             with open(self.PROTOCOL_LOCATION, "a+") as fd:

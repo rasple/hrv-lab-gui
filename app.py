@@ -1,14 +1,18 @@
-from flask import Flask, request, jsonify, render_template, send_from_directory, url_for, Response
+from flask import Flask, request, jsonify, render_template, send_from_directory, url_for, Response, g
 from platform   import system as system_name
 from subprocess import call   as system_call
 import os
 from settings import Settings
 from json import dumps
-
+import measure
+from log import Log
+from protocol import Protocol
+from threading import Thread
+from measure import Measurement
 
 app = Flask(__name__)
 
-
+m = Measurement()
 
 @app.route('/')
 def main_page():
@@ -39,22 +43,37 @@ def imprint_page():
 @app.route('/information')
 def information_page():
     return render_template('information.html')
-
-# Business stuff
  
 @app.route('/start', methods=['POST'])
 def start():
-    print(dumps(request.form))
+    global m
+    m.start_measurement(request.form)
     return Response(status=200)
 
 @app.route('/abort')
 def abort():
-    pass
+    m.abort()
 
 @app.route('/time')
 def time():
-    pass
+    global m
+    return m.get_time()
 
+@app.route('/log')
+def log():
+    return Log().load()
+@app.route('/clearLog')
+def clear_log():
+    Log().reset()
+
+@app.route('/protocol')
+def protocol():
+    return Protocol().load()
+
+@app.route('/clearProtocol')
+def clear_protocol():
+    Protocol().reset()
+    
 @app.route('/ping')
 def ping_response():
     return jsonify({'raspi' : ping(Settings().load()['raspi_ip']['value']),

@@ -1,15 +1,15 @@
-function ping(){
+function ping() {
     button = $('#refreshButton')
     button.html('Refreshing...')
-    button.attr("class", 'btn btn-warning')
+    button.attr('class', 'btn btn-warning')
 
     var dectStatus = $('#dect-status')
     var wifiStatus = $('#wifi-status')
     var archpadStatus = $('#archpad-status')
 
-    $.get("ping", function(result, status){
+    $.get('ping', function (result, status) {
 
-        if(result['raspi']){
+        if (result['raspi']) {
             wifiStatus.attr('class', 'badge badge-success')
             wifiStatus.html('Connected')
         }
@@ -17,7 +17,7 @@ function ping(){
             wifiStatus.attr('class', 'badge badge-danger')
             wifiStatus.html('Disconnected')
         }
-        if(result['dect']){
+        if (result['dect']) {
             dectStatus.attr('class', 'badge badge-success')
             dectStatus.html('Connected')
         }
@@ -25,7 +25,7 @@ function ping(){
             dectStatus.attr('class', 'badge badge-danger')
             dectStatus.html('Disconnected')
         }
-        if(result['archpad']){
+        if (result['archpad']) {
             archpadStatus.attr('class', 'badge badge-success')
             archpadStatus.html('Connected')
         }
@@ -34,57 +34,69 @@ function ping(){
             archpadStatus.html('Disconnected')
         }
 
-    button.html('Refresh')
-    button.attr("class", 'btn btn-success')
-        
+        button.html('Refresh')
+        button.attr('class', 'btn btn-primary')
+
     });
 }
 
-function time(){
-    $.ajax({
-        type: 'GET',
-        url: '/time',
-        success: function(){},
-        error: function(){},
-        complete: function(){}
-    })
+function stop() {
+
 }
 
-function start(){
-    startButton = $('#startButton')
-    startButton.attr('class', 'btn btn-danger')
-    startButton.html('Stop')
-    $.ajax({
-        type: 'GET',
-        url: '/start',
-        success: function(){},
-        error: function(){},
-        complete: function(){
-        startButton.attr('class', 'btn btn-primary')
-        startButton.html('Start')
-        }
-    })
-    
-    
-}
-function abort(){
+
+function abort() {
     $.ajax({
         type: 'GET',
         url: '/abort',
-        success: function(){},
-        error: function(){},
-        complete: function(){}
+        success: function () { },
+        error: function () { },
+        complete: function () { }
     })
 }
 
-function exportFile(){
-
+function disableEverything(){
+    form.classList.add('was-validated');
+    $('#startButton').prop('disabled', true)
+    $('form#form :input').prop('disabled', true)
+    $('#stopButton').css('display', 'block')
 }
 
-function clear(){
-
+function enableEverything(){
+    form.classList.add('needs-validation');
+    $('#startButton').prop('disabled', false)
+    $('form#form :input').prop('disabled', false)
+    $('#stopButton').css('display', 'none')
 }
 
-function sendForm() {
-    
+function time() {
+    $.get('time', function (data) {
+        $('#timer').html(data)
+        if(data == 'Done!'){
+            enableEverything()
+        }
+        setTimeout(time, 1000);
+    });
+}
+
+function protocol() {
+    $.get('protocol', function (data) {
+        $('#protocol').html(data)
+        setTimeout(protocol, 2000);
+    });
+}
+
+function log(){
+    $.get('log', function (data) {
+        $('#log').html(data)
+        setTimeout(log, 2000);
+    }); 
+}
+
+function clearLog(){
+    $.get('clearLog')
+}
+
+function clearProtocol(){
+    $.get('clearProtocol')
 }

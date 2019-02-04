@@ -30,3 +30,7 @@ textarea {
     background-color: #32383e;
     border-color: #32383e;
 }
+
+#protocol, #log {
+    font-family: monospace;
+}

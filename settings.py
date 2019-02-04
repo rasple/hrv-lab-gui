@@ -29,15 +29,18 @@ class Settings:
     def reset(self):
         print('Deleting save')
         remove(self.SETTINGS_LOCATION)
+    
+    def get(self, key):
+        return self.load()[key]['value']
 
     def write(
         self,
         raspi_ip="192.168.0.15",
         dect_ip="192.168.0.17",
-        pre_wait_time_in_s='03:00',
-        post_wait_time_in_s='03:00',
-        total_time_in_s='15:00',
+        pre_wait_time='03:00',
+        post_wait_time='03:00',
         radiation_time='05:00',
+        total_time='15:00'
     ):
 
         with open(self.SETTINGS_LOCATION, "w+") as fd:
@@ -58,15 +61,22 @@ class Settings:
                             "type": "text",
                             "pattern": "^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
                         },
-                        "pre_wait_time_in_s": {
-                            "value": pre_wait_time_in_s,
+                        "total_time": {
+                            "value": total_time,
+                            "name": "Total time",
+                            "tooltip": "Total time of measurement",
+                            "type": "text",
+                            "pattern": "^\d\d:\d\d$"
+                        },
+                        "pre_wait_time": {
+                            "value": pre_wait_time,
                             "name": "Pre-Measurement time",
                             "tooltip": "Time before the actual radiation exposure where nothing happens",
                             "type": "text",
                             "pattern": "^\d\d:\d\d$"
                         },
-                        "post_wait_time_in_s": {
-                            "value": post_wait_time_in_s,
+                        "post_wait_time": {
+                            "value": post_wait_time,
                             "name": "Post-Measurement time",
                             "tooltip": "Time after the actual radiation exposure where nothing happens",
                             "type": "text",

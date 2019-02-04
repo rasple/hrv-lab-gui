@@ -3,8 +3,7 @@ from os import remove
 from threading import Thread, Lock
 
 class Log:
-
-    
+ 
     LOG_LOCATION='log.txt'
     mutex = Lock()
 
@@ -34,7 +33,8 @@ class Log:
             remove(self.LOG_LOCATION)
         finally:
             self.mutex.release()
-    def append(self, line):
+    
+    def print(self, line):
         self.mutex.acquire()
         try:
             with open(self.LOG_LOCATION, "a+") as fd:
@@ -43,4 +43,3 @@ class Log:
                 fd.close()
         finally:
             self.mutex.release()
-            

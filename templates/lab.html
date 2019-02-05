@@ -82,8 +82,8 @@
             </div>
           </div>
 
-          <button class="btn btn-primary" action="submit" id="startButton">Start</button>
-          <button class="btn btn-danger" type="button" onclick="stop()" id="stopButton" style="display:none">Stop</button>
+          <button class="btn btn-primary" action="submit" id="startButton" onclick="setTimeout(time, 1000)">Start</button>
+          <button class="btn btn-danger" type="button" onclick="abort()" id="stopButton" >Stop</button>
         </form>
       </div>
       <div class="col-md-4">
@@ -176,15 +176,9 @@
           type: 'post',
           data: $('.needs-validation').serialize(),
           complete: function () {
-            form.classList.add('was-validated');
-            $('#startButton').disabled = true
-            $('form#form :input').prop("disabled", true)
-            $('#stopButton').css('display', 'block')
+            disableEverything()
           }
         });
-      }
-      else {
-
       }
 
     });

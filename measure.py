@@ -1,14 +1,12 @@
-from flask import g
 import datetime
-from settings import Settings
 import urllib.request as urlget
-from protocol import Protocol
-from log import Log
-from timetools import convert_time_to_seconds, convert_seconds_to_time
-from functools import reduce
+from random import randint
 from threading import Timer
 from timeit import default_timer
-from random import randint
+from log import Log
+from protocol import Protocol
+from settings import Settings
+from timetools import convert_seconds_to_time, convert_time_to_seconds
 
 
 class Measurement:
@@ -18,45 +16,72 @@ class Measurement:
     turn_on = None
     turn_off = None
     final = None
+    result = ""
     
 
-    def on(self):
-        time = datetime.datetime.now().isoformat()
-        l = Log()
-        l.print('Powering on')
-        l.print(
-            'Pi response: '
-            + urlget.urlopen(
-                'http://' + Settings().get('raspi_ip') + ':31415/?action=on'
-            ).read()
-        )
-        l.print(
-            'DECT response: '
-            + urlget.urlopen(
-                'http://' + Settings().get('dect_ip') + '/sw?u=admin&p=admin&o=1&f=on'
-            ).read()
-        )
-        l.print(time)
-        self.running = False
+    
 
-    def off(self):
-        time = datetime.datetime.now().isoformat()
+    def turn_pi(self, state):
         l = Log()
-        l.print('Powering off')
-        l.print(
-            'Pi response: '
-            + urlget.urlopen(
-                'http://' + Settings().get('raspi_ip') + ':31415/?action=on'
-            ).read()
-        )
-        l.print(
-            'DECT response: '
-            + urlget.urlopen(
-                'http://' + Settings().get('dect_ip') + '/sw?u=admin&p=admin&o=1&f=off'
-            ).read()
-        )
-        l.print(time)
-        self.running = False
+        if state == 'on':
+            l.print('Turning Pi on')
+            res = urlget.urlopen('http://' + Settings().get('raspi_ip') + ':31415/?action=on').getcode()
+            l.print('Pi response: ' + res)
+            if res != 200:
+                l.print('Pi did not respond')
+                #self.abort()
+            else:
+                l.print('Successful!')
+        else:
+            res = urlget.urlopen('http://' + Settings().get('raspi_ip') + ':31415/?action=off').getcode()
+            l.print('Pi response: ' + res)
+            if res != 200:
+                l.print('Pi did not respond')
+                #self.abort()
+            else:
+                l.print('Successful!')
+
+    def turn_dect(self, state):
+        l = Log()
+        if state == 'on':
+            l.print('Turning DECT on')
+            res = urlget.urlopen('http://' + Settings().get('dect_ip') + '/sw?u=admin&p=admin&o=1&f=on').getcode()
+            l.print('DECT response: ' + res)
+            if res != 200:
+                l.print('DECT did not respond')
+                #self.abort()
+            else:
+                l.print('Successful!')
+        else:
+            l.print('Turning DECT off')
+            res = urlget.urlopen('http://' + Settings().get('dect_ip') + '/sw?u=admin&p=admin&o=1&f=off').getcode()
+            l.print('DECT response: ' + res)
+            if res != 200:
+                l.print('DECT did not respond')
+                #self.abort()
+            else:
+                l.print('Successful!')
+
+    def kill(self):
+        Log().print('Turning off all devices')
+        self.turn_dect('off')
+        self.turn_pi('off')
+    
+    def on(self, start):
+        l = Log()
+        message = 'Radiation on after ' + convert_seconds_to_time(start) + ' ( at ' + datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y') + ')'
+        self.result += message
+        l.print(message)
+        turn_pi('on')
+        turn_dect('off')
+
+    def off(self, stop):
+        l = Log()
+        message = 'Radiation off after ' + convert_seconds_to_time(stop) + '( at ' + datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y') + ')'
+        self.result += message
+        l.print(message)
+        self.turn_pi('off')
+        self.turn_dect('off')
 
     def get_time(self):
         s = Settings()
@@ -79,9 +104,11 @@ class Measurement:
 
     def abort(self):
         self.cancel()
-        self.off()
+        self.kill()
         self.running = False
-        Log().print('Aborted')
+        message = 'Aborted: ' + datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y')
+        Protocol().print(message)
+        Log().print(message)
 
     def start_measurement(self, form):
         
@@ -95,9 +122,8 @@ class Measurement:
         self.start_time = default_timer()
 
         l.print('Starting Measurement')
-        p.print('Begin: ' + time)
-        
-        result = ('Age: ' + form['age'] + '\n' +
+        self.result += 'Begin: ' + time + '\n'
+        self.result = ('Age: ' + form['age'] + '\n' +
             'Sex: ' + form['sex'] + '\n' +
             'Weight: ' + form['weight'] + '\n' +
             'Height: ' + form['weight'] + '\n' +
@@ -108,32 +134,23 @@ class Measurement:
         RADIATION_TIME = convert_time_to_seconds(s.get('radiation_time'))
         TOTAL_TIME = convert_time_to_seconds(s.get('total_time'))
         
-        # l.print('Total time: ' + str(TOTAL_TIME))
-        
-
         window = TOTAL_TIME - PRE_WAIT_TIME - POST_WAIT_TIME - RADIATION_TIME
 
         start = PRE_WAIT_TIME + randint(0, window)
+
         end = start + RADIATION_TIME
 
-        result += ('Start: 00:00 \n' + 
-            'Radiation on: ' + convert_seconds_to_time(start) + '\n' + 
-            'Radiaton off: ' + convert_seconds_to_time(end) + '\n' + 
-            'End: ' + convert_seconds_to_time(TOTAL_TIME) + '\n')
+        self.turn_on = Timer(float(start), self.on, [start])
+        self.turn_off = Timer(float(end), self.off, [end])
+        self.final = Timer(float(TOTAL_TIME), self.end)
+        
+        self.start()
 
-        self.turn_on = Timer(float(start), self.on)
-        self.turn_off = Timer(float(end), self.off)
-        self.final = Timer(float(TOTAL_TIME), self.end, result)
-        self.turn_on.start()
-        self.turn_off.start()
-        self.final.start()
-
-    def end(self, result):
+    def end(self, end):
         self.cancel()
-        self.off()
+        self.kill()
         self.running = False
-        Protocol().print(result)
+        Protocol().print(self.result)
         time = datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y')
         Protocol().print('End: ' + time)
         Log().print('Measurement ended')
-

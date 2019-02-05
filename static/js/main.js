@@ -40,42 +40,41 @@ function ping() {
     });
 }
 
-function stop() {
 
-}
 
 
 function abort() {
     $.ajax({
         type: 'GET',
         url: '/abort',
-        success: function () { },
-        error: function () { },
-        complete: function () { }
+        success: function () {enableEverything()},
     })
 }
 
-function disableEverything(){
+function disableEverything() {
     form.classList.add('was-validated');
     $('#startButton').prop('disabled', true)
     $('form#form :input').prop('disabled', true)
-    $('#stopButton').css('display', 'block')
+    $('#stopButton').css('display', 'float')
+    console.log("Disabled")
 }
 
-function enableEverything(){
+function enableEverything() {
     form.classList.add('needs-validation');
     $('#startButton').prop('disabled', false)
     $('form#form :input').prop('disabled', false)
     $('#stopButton').css('display', 'none')
+    console.log("Enabled")
 }
 
 function time() {
     $.get('time', function (data) {
-        $('#timer').html(data)
-        if(data == 'Done!'){
+        $('#timer').html(data['time'])
+        if (data['running']) {
+            setTimeout(time, 1000);
+        } else {
             enableEverything()
         }
-        setTimeout(time, 1000);
     });
 }
 
@@ -86,17 +85,23 @@ function protocol() {
     });
 }
 
-function log(){
+function log() {
     $.get('log', function (data) {
         $('#log').html(data)
         setTimeout(log, 2000);
-    }); 
+    });
 }
 
-function clearLog(){
+function clearLog() {
     $.get('clearLog')
+    $.get('log', function (data) {
+        $('#log').html(data)
+    });
 }
 
-function clearProtocol(){
+function clearProtocol() {
     $.get('clearProtocol')
+    $.get('protocol', function (data) {
+        $('#protocol').html(data)
+    });
 }

@@ -25,6 +25,8 @@ app = Flask(__name__)
 
 m = Measurement()
 
+if __name__== '__main__':
+    app.run(host='0.0.0.0', port=80)
 
 @app.route("/")
 def main_page():

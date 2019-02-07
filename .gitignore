@@ -1,8 +1,8 @@
-static/css/bootstrap
-static/js/popper
-static/js/jquery
-static/js/validation
-static/js/bootstrap
+#static/css/bootstrap
+#static/js/popper
+#static/js/jquery
+#static/js/validation
+#static/js/bootstrap
 venv
 workspace.code-workspace
 .vscode

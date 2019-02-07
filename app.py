@@ -102,6 +102,9 @@ def clear_protocol():
     Protocol().reset()
     return Response(status=200)
 
+@app.route('/running')
+def running():
+    return m.running
 
 @app.route("/ping")
 def ping_response():

@@ -44,26 +44,24 @@ function ping() {
 
 
 function abort() {
-    $.ajax({
-        type: 'GET',
-        url: '/abort',
-        success: function () {enableEverything()},
-    })
+    $.get('abort', function () {enableEverything()})
 }
 
 function disableEverything() {
     form.classList.add('was-validated');
     $('#startButton').prop('disabled', true)
-    $('form#form :input').prop('disabled', true)
-    $('#stopButton').css('display', 'float')
+    $('#form input').prop('disabled', true)
+    $('#form select').prop('disabled', true)
+    $('#stopButton').show('slow')
     console.log("Disabled")
 }
 
 function enableEverything() {
     form.classList.add('needs-validation');
     $('#startButton').prop('disabled', false)
-    $('form#form :input').prop('disabled', false)
-    $('#stopButton').css('display', 'none')
+    $('#form input').prop('disabled', false)
+    $('#form select').prop('disabled', false)
+    $('#stopButton').hide()
     console.log("Enabled")
 }
 

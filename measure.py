@@ -25,43 +25,47 @@ class Measurement:
         l = Log()
         if state == 'on':
             l.print('Turning Pi on')
-            res = urlget.urlopen('http://' + Settings().get('raspi_ip') + ':31415/?action=on').getcode()
-            l.print('Pi response: ' + res)
-            if res != 200:
-                l.print('Pi did not respond')
-                #self.abort()
-            else:
+            res = ""
+            try:
+                res = urlget.urlopen('http://' + Settings().get('raspi_ip') + ':31415/?action=on', timeout=1).getcode()
+                l.print('Pi response: ' + res)
                 l.print('Successful!')
+            except:
+                l.print('Pi did not respond')
+                #self.abort()   
         else:
-            res = urlget.urlopen('http://' + Settings().get('raspi_ip') + ':31415/?action=off').getcode()
-            l.print('Pi response: ' + res)
-            if res != 200:
+            l.print('Turning Pi off')
+            try:
+                res = urlget.urlopen('http://' + Settings().get('raspi_ip') + ':31415/?action=off', timeout=1).getcode()
+                l.print('Pi response: ' + res)
+                l.print('Successful!')
+            except:
                 l.print('Pi did not respond')
                 #self.abort()
-            else:
-                l.print('Successful!')
+                
 
     def turn_dect(self, state):
         l = Log()
         if state == 'on':
             l.print('Turning DECT on')
-            res = urlget.urlopen('http://' + Settings().get('dect_ip') + '/sw?u=admin&p=admin&o=1&f=on').getcode()
-            l.print('DECT response: ' + res)
-            if res != 200:
+            try:
+                res = urlget.urlopen('http://' + Settings().get('dect_ip') + '/sw?u=admin&p=admin&o=1&f=on',timeout=1).getcode()
+                l.print('DECT response: ' + res)
+                l.print('Successful!')
+            except:
                 l.print('DECT did not respond')
                 #self.abort()
-            else:
-                l.print('Successful!')
+            
         else:
             l.print('Turning DECT off')
-            res = urlget.urlopen('http://' + Settings().get('dect_ip') + '/sw?u=admin&p=admin&o=1&f=off').getcode()
-            l.print('DECT response: ' + res)
-            if res != 200:
+            try:
+                res = urlget.urlopen('http://' + Settings().get('dect_ip') + '/sw?u=admin&p=admin&o=1&f=off', timeout=1).getcode()
+                l.print('DECT response: ' + res)
+                l.print('Successful!')
+            except:
                 l.print('DECT did not respond')
                 #self.abort()
-            else:
-                l.print('Successful!')
-
+                
     def kill(self):
         Log().print('Turning off all devices')
         self.turn_dect('off')
@@ -69,15 +73,15 @@ class Measurement:
     
     def on(self, start):
         l = Log()
-        message = 'Radiation on after ' + convert_seconds_to_time(start) + ' ( at ' + datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y') + ')'
+        message = 'Radiation on after ' + convert_seconds_to_time(start) + ' (at ' + datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y') + ')'
         self.result += message
         l.print(message)
-        turn_pi('on')
-        turn_dect('off')
+        self.turn_pi('on')
+        self.turn_dect('on')
 
     def off(self, stop):
         l = Log()
-        message = 'Radiation off after ' + convert_seconds_to_time(stop) + '( at ' + datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y') + ')'
+        message = 'Radiation off after ' + convert_seconds_to_time(stop) + '(at ' + datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y') + ')'
         self.result += message
         l.print(message)
         self.turn_pi('off')
@@ -146,7 +150,7 @@ class Measurement:
         
         self.start()
 
-    def end(self, end):
+    def end(self):
         self.cancel()
         self.kill()
         self.running = False

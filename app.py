@@ -80,7 +80,7 @@ def time():
 
 
 @app.route("/log")
-def log():
+def get_log():
     return Log().load()
 
 

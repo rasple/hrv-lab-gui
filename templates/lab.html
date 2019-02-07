@@ -49,16 +49,18 @@
             <div class="col">
               <div class="form-group">
                 <label for="weight">Weight</label>
-                <input id="weight" type="text" name="weight" class="form-control" placeholder="Weight" pattern="\d\d?[\.\d+]?"
+                <input id="weight" type="text" name="weight" class="form-control" placeholder="Weight" pattern="\d\d?(\.\d+)?"
                   required>
+                  <small class="form-text text-muted">(in kg)</small>
               </div>
-              <small class="form-text text-muted">Please use . (dot) instead of , (comma) for decimals</small>
+              
             </div>
             <div class="col">
               <div class="form-group">
                 <label for="height">Height</label>
-                <input id="height" type="text" name="height" class="form-control" placeholder="Height" pattern="\d\d?[\.\d+]?"
+                <input id="height" type="text" name="height" class="form-control" placeholder="Height" pattern="\d(\.\d+)?"
                   required>
+                  <small class="form-text text-muted">(in m)</small>
               </div>
 
             </div>
@@ -78,10 +80,10 @@
                   <option>Male</option>
                   <option>Female</option>
                 </select>
+                <small class="form-text text-muted">Please use . (dot) instead of , (comma) for decimals</small>
               </div>
             </div>
           </div>
-
           <button class="btn btn-primary" action="submit" id="startButton" onclick="setTimeout(time, 1000)">Start</button>
           <button class="btn btn-danger" type="button" onclick="abort()" id="stopButton" >Stop</button>
         </form>
@@ -141,14 +143,16 @@
         <button class="btn btn-danger" onclick="clearProtocol()">Clear</button>
       </div>
     </div>
+    <button class="btn btn-secondary" onclick="$('#spoiler').toggle('slow')">Hide/Show Log</button>
     <div class="row">
-      <div class="col-md-10">
-          <div class="form-group">
+      
+      <div id="spoiler" class="col-md-10">
+          <div  class="form-group">
           <label for="comment">Log</label>
           <textarea class="form-control" rows="5" id="log" disabled></textarea>
           <small>For debugging only as experiment has to be double blind</small>
           </div>
-          <button class="btn btn-danger" onclick="clearLog()" id="startButton">Clear</button>
+          <button class="btn btn-danger" onclick="clearLog()" id="clearLog">Clear</button>
       </div>
     </div>
   </div>

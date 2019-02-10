@@ -7,6 +7,7 @@ from log import Log
 from protocol import Protocol
 from settings import Settings
 from timetools import convert_seconds_to_time, convert_time_to_seconds
+from time import sleep
 
 
 class Measurement:
@@ -17,9 +18,6 @@ class Measurement:
     turn_off = None
     final = None
     result = ""
-    
-
-    
 
     def turn_pi(self, state):
         l = Log()
@@ -32,7 +30,8 @@ class Measurement:
                 l.print('Successful!')
             except:
                 l.print('Pi did not respond')
-                #self.abort()   
+                if self.running:
+                    self.abort()   
         else:
             l.print('Turning Pi off')
             try:
@@ -41,7 +40,8 @@ class Measurement:
                 l.print('Successful!')
             except:
                 l.print('Pi did not respond')
-                #self.abort()
+                if self.running:
+                    self.abort()
                 
 
     def turn_dect(self, state):
@@ -54,7 +54,8 @@ class Measurement:
                 l.print('Successful!')
             except:
                 l.print('DECT did not respond')
-                #self.abort()
+                if self.running:
+                    self.abort()
             
         else:
             l.print('Turning DECT off')
@@ -64,8 +65,12 @@ class Measurement:
                 l.print('Successful!')
             except:
                 l.print('DECT did not respond')
-                #self.abort()
-                
+                if self.running:
+                    self.abort()
+
+    def get_current_time(self):
+        return datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y')
+
     def kill(self):
         Log().print('Turning off all devices')
         self.turn_dect('off')
@@ -73,17 +78,17 @@ class Measurement:
     
     def on(self, start):
         l = Log()
-        message = 'Radiation on after ' + convert_seconds_to_time(start) + ' (at ' + datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y') + ')\n'
+        message = self.get_current_time() + ': Radiation on after ' + convert_seconds_to_time(start) + '\n'
         self.result += message
-        l.print(message)
+        l.print(message.replace('\n', ''))
         self.turn_pi('on')
         self.turn_dect('on')
 
     def off(self, stop):
         l = Log()
-        message = 'Radiation off after ' + convert_seconds_to_time(stop) + '(at ' + datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y') + ')\n'
+        message = self.get_current_time() + ': Radiation off after ' + convert_seconds_to_time(stop)
         self.result += message
-        l.print(message)
+        l.print(message.replace('\n', ''))
         self.turn_pi('off')
         self.turn_dect('off')
 
@@ -107,10 +112,11 @@ class Measurement:
             self.final.start()
 
     def abort(self):
+        self.running = False
         self.cancel()
         self.kill()
-        self.running = False
-        message = 'Aborted: ' + datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y')
+        sleep(1.5)
+        message = self.get_current_time() + ': Aborted\n' 
         Protocol().print(message)
         Log().print(message)
 
@@ -122,10 +128,10 @@ class Measurement:
         l = Log()
         s = Settings()
         self.running = True
-        time = datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y')
+        time = self.get_current_time()
         self.start_time = default_timer()
 
-        l.print('Starting Measurement')
+        l.print('Starting Measurement ' + time)
         self.result += 'Begin: ' + time + '\n'
         self.result = ('Age: ' + form['age'] + '\n' +
             'Sex: ' + form['sex'] + '\n' +
@@ -155,6 +161,6 @@ class Measurement:
         self.kill()
         self.running = False
         Protocol().print(self.result)
-        time = datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y')
-        Protocol().print('End: ' + time)
-        Log().print('Measurement ended')
+        time = self.get_current_time()
+        Protocol().print(time + ': End\n')
+        Log().print(time + ': Measurement ended ')

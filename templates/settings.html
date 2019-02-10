@@ -49,7 +49,7 @@
 
       <label for="{{k}}">{{v.name}}</label>
       <input type="{{v.type}}" name="{{k}}" class="form-control" id="{{k}}" aria-describedby="{{k}}Descriptor" value="{{v.value}}"
-        pattern="{{v.pattern}}" required>
+        pattern="{{v.pattern}}" required={{v.required}}>
       <small class="form-text text-muted" id="{{k}}Descriptor">{{v.tooltip}}</small>
 
       {% endfor %}

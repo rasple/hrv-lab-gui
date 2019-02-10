@@ -73,7 +73,7 @@ class Measurement:
     
     def on(self, start):
         l = Log()
-        message = 'Radiation on after ' + convert_seconds_to_time(start) + ' (at ' + datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y') + ')'
+        message = 'Radiation on after ' + convert_seconds_to_time(start) + ' (at ' + datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y') + ')\n'
         self.result += message
         l.print(message)
         self.turn_pi('on')
@@ -81,7 +81,7 @@ class Measurement:
 
     def off(self, stop):
         l = Log()
-        message = 'Radiation off after ' + convert_seconds_to_time(stop) + '(at ' + datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y') + ')'
+        message = 'Radiation off after ' + convert_seconds_to_time(stop) + '(at ' + datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y') + ')\n'
         self.result += message
         l.print(message)
         self.turn_pi('off')
@@ -130,7 +130,7 @@ class Measurement:
         self.result = ('Age: ' + form['age'] + '\n' +
             'Sex: ' + form['sex'] + '\n' +
             'Weight: ' + form['weight'] + '\n' +
-            'Height: ' + form['weight'] + '\n' +
+            'Height: ' + form['height'] + '\n' +
             'Start time: ' + str(time) + '\n')
 
         PRE_WAIT_TIME = convert_time_to_seconds(s.get('pre_wait_time'))

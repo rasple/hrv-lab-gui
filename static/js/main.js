@@ -41,8 +41,21 @@ function ping() {
 }
 
 
-
-
+function save(type){
+    var text = ""
+    if (type == 'log'){
+        var text = $("#log").val();
+    }
+    else if (type == 'protocol'){
+        var text = $("#protocol").val();
+    }
+    else {
+        return
+    }
+    var filename = type
+    var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, filename+".txt");
+}
 function abort() {
     $.get('abort', function () {enableEverything()})
 }
@@ -53,7 +66,6 @@ function disableEverything() {
     $('#form input').prop('disabled', true)
     $('#form select').prop('disabled', true)
     $('#stopButton').show('slow')
-    console.log("Disabled")
 }
 
 function enableEverything() {
@@ -62,7 +74,6 @@ function enableEverything() {
     $('#form input').prop('disabled', false)
     $('#form select').prop('disabled', false)
     $('#stopButton').hide()
-    console.log("Enabled")
 }
 
 function time() {

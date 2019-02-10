@@ -64,28 +64,28 @@ class Settings:
                         "total_time": {
                             "value": total_time,
                             "name": "Total time",
-                            "tooltip": "Total time of measurement",
+                            "tooltip": "Total time of measurement (minutes)",
                             "type": "text",
                             "pattern": "^\d\d:\d\d$"
                         },
                         "pre_wait_time": {
                             "value": pre_wait_time,
                             "name": "Pre-Measurement time",
-                            "tooltip": "Time before the actual radiation exposure where nothing happens",
+                            "tooltip": "Time before the actual radiation exposure where nothing happens (minutes)",
                             "type": "text",
                             "pattern": "^\d\d:\d\d$"
                         },
                         "post_wait_time": {
                             "value": post_wait_time,
                             "name": "Post-Measurement time",
-                            "tooltip": "Time after the actual radiation exposure where nothing happens",
+                            "tooltip": "Time after the actual radiation exposure where nothing happens (minutes)",
                             "type": "text",
                             "pattern": "^\d\d:\d\d$"
                         },
                         "radiation_time": {
                             "value": radiation_time,
                             "name": "Radiation time",
-                            "tooltip": "Amount of seconds of actual radiation",
+                            "tooltip": "Duration of actual radiation (minutes)",
                             "type": "text",
                             "pattern": "^\d\d:\d\d$"
                         },

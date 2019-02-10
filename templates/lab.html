@@ -139,7 +139,7 @@
           <label for="comment">Protocol</label>
           <textarea class="form-control" rows="5" id="protocol" disabled></textarea>
         </div>
-        <button class="btn btn-primary" onclick="exportFile()">Export</button>
+        <button class="btn btn-primary" onclick="save('protocol')">Export</button>
         <button class="btn btn-danger" onclick="clearProtocol()">Clear</button>
       </div>
     </div>
@@ -152,6 +152,7 @@
           <textarea class="form-control" rows="5" id="log" disabled></textarea>
           <small>For debugging only as experiment has to be double blind</small>
           </div>
+          <button class="btn btn-primary" onclick="save('log')">Export</button>
           <button class="btn btn-danger" onclick="clearLog()" id="clearLog">Clear</button>
       </div>
     </div>
@@ -162,6 +163,7 @@
 <script src="{{ url_for('static', filename='js/jquery/jquery-3.3.1.min.js') }}/" crossorigin="anonymous"></script>
 <script src="{{ url_for('static', filename='js/popper/popper.min.js') }}" crossorigin="anonymous"></script>
 <script src="{{ url_for('static', filename='js/bootstrap/bootstrap.bundle.min.js') }}" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='js/FileSaver/FileSaver.js') }}" crossorigin="anonymous"></script>
 <script src="{{ url_for('static', filename='js/main.js') }}" crossorigin="anonymous"></script>
 
 <script>$(document).ready(function () {
@@ -170,7 +172,7 @@
     protocol()
     log()
     ping()
-
+    $('#spoiler').hide()
     $('.needs-validation').submit(function (e) {
       e.preventDefault()
       e.stopPropagation()

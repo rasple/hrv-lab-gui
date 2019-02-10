@@ -31,7 +31,7 @@ class Measurement:
             except:
                 l.print('Pi did not respond')
                 if self.running:
-                    self.abort()   
+                    raise Exception('DECT did not respond')   
         else:
             l.print('Turning Pi off')
             try:
@@ -41,7 +41,7 @@ class Measurement:
             except:
                 l.print('Pi did not respond')
                 if self.running:
-                    self.abort()
+                    raise Exception('Pi did not respond')
                 
 
     def turn_dect(self, state):
@@ -55,7 +55,7 @@ class Measurement:
             except:
                 l.print('DECT did not respond')
                 if self.running:
-                    self.abort()
+                    raise Exception('DECT did not respond')
             
         else:
             l.print('Turning DECT off')
@@ -66,12 +66,13 @@ class Measurement:
             except:
                 l.print('DECT did not respond')
                 if self.running:
-                    self.abort()
+                    raise Exception('DECT did not respond')
 
     def get_current_time(self):
         return datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y')
 
     def kill(self):
+        Log().print('Aborting')
         Log().print('Turning off all devices')
         self.turn_dect('off')
         self.turn_pi('off')
@@ -81,16 +82,22 @@ class Measurement:
         message = self.get_current_time() + ': Radiation on after ' + convert_seconds_to_time(start) + '\n'
         self.result += message
         l.print(message.replace('\n', ''))
-        self.turn_pi('on')
-        self.turn_dect('on')
+        try:
+            self.turn_pi('on')
+            self.turn_dect('on')
+        except:
+            self.abort()
 
     def off(self, stop):
         l = Log()
         message = self.get_current_time() + ': Radiation off after ' + convert_seconds_to_time(stop)
         self.result += message
         l.print(message.replace('\n', ''))
-        self.turn_pi('off')
-        self.turn_dect('off')
+        try:
+            self.turn_pi('off')
+            self.turn_dect('off')
+        except:
+            self.abort()
 
     def get_time(self):
         s = Settings()
@@ -115,7 +122,7 @@ class Measurement:
         self.running = False
         self.cancel()
         self.kill()
-        sleep(1.5)
+        sleep(3)
         message = self.get_current_time() + ': Aborted\n' 
         Protocol().print(message)
         Log().print(message)

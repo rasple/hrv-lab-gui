@@ -25,23 +25,21 @@ class Measurement:
             l.print('Turning Pi on')
             res = ""
             try:
-                res = urlget.urlopen('http://' + Settings().get('raspi_ip') + ':31415/?action=on', timeout=1).getcode()
-                l.print('Pi response: ' + res)
-                l.print('Successful!')
-            except:
-                l.print('Pi did not respond')
-                if self.running:
-                    raise Exception('DECT did not respond')   
+                res = urlget.urlopen('http://' + Settings().get('raspi_ip') + ':31415/?action=on', timeout=5).getcode()
+            finally:
+                l.print('Pi response: ' + str(res))
+                if res != 200:
+                    self.abort()
+                 
         else:
             l.print('Turning Pi off')
             try:
-                res = urlget.urlopen('http://' + Settings().get('raspi_ip') + ':31415/?action=off', timeout=1).getcode()
-                l.print('Pi response: ' + res)
-                l.print('Successful!')
-            except:
-                l.print('Pi did not respond')
-                if self.running:
-                    raise Exception('Pi did not respond')
+                res = urlget.urlopen('http://' + Settings().get('raspi_ip') + ':31415/?action=off', timeout=5).getcode()
+            finally:
+                l.print('Pi response: ' + str(res))
+                if res != 200:
+                    self.abort()
+                
                 
 
     def turn_dect(self, state):
@@ -49,24 +47,22 @@ class Measurement:
         if state == 'on':
             l.print('Turning DECT on')
             try:
-                res = urlget.urlopen('http://' + Settings().get('dect_ip') + '/sw?u=admin&p=admin&o=1&f=on',timeout=1).getcode()
-                l.print('DECT response: ' + res)
-                l.print('Successful!')
-            except:
-                l.print('DECT did not respond')
-                if self.running:
-                    raise Exception('DECT did not respond')
+                res = urlget.urlopen('http://' + Settings().get('dect_ip') + '/sw?u=admin&p=admin&o=1&f=on',timeout=5).getcode()
+            finally:
+                l.print('DECT response: ' + str(res))
+                if res != 200:
+                    self.abort()
+                
             
         else:
             l.print('Turning DECT off')
             try:
-                res = urlget.urlopen('http://' + Settings().get('dect_ip') + '/sw?u=admin&p=admin&o=1&f=off', timeout=1).getcode()
-                l.print('DECT response: ' + res)
-                l.print('Successful!')
-            except:
-                l.print('DECT did not respond')
-                if self.running:
-                    raise Exception('DECT did not respond')
+                res = urlget.urlopen('http://' + Settings().get('dect_ip') + '/sw?u=admin&p=admin&o=1&f=off', timeout=5).getcode()
+            finally:
+                l.print('DECT response: ' + str(res))
+                if res != 200:
+                    self.abort()
+                
 
     def get_current_time(self):
         return datetime.datetime.now().strftime('%H:%M:%S %d.%m.%Y')

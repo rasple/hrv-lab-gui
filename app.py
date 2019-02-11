@@ -109,15 +109,15 @@ def ping_response():
     return jsonify(
         {
             'raspi': ping(Settings().load()['raspi_ip']['value']),
-            'dect': ping(Settings().load()['dect_ip']['value']),
-            'archpad': ping('192.168.178.93'),
+            'dect': ping(Settings().load()['dect_ip']['value'])
         }
     )
 
 
 def ping(host):
-    param = '-n 1 -w 1000' if system_name().lower() == 'windows' else '-c 1 -W 1'
-    command = ['ping', param, host]
+    param = ' -n 1 -w 1000 ' if system_name().lower() == 'windows' else ' -c 1 -W 1 '
+    #command = ['ping', param, host]
+    command = 'ping' + param + host
     return system_call(command) == 0
 
 if __name__== '__main__':

@@ -49,7 +49,7 @@
             <div class="col">
               <div class="form-group">
                 <label for="weight">Weight</label>
-                <input id="weight" type="text" name="weight" class="form-control" placeholder="Weight" pattern="\d\d?(\.\d+)?"
+                <input id="weight" type="text" name="weight" class="form-control" placeholder="Weight" pattern="\d\d?\d?(\.\d+)?"
                   required>
                   <small class="form-text text-muted">(in kg)</small>
               </div>
@@ -140,7 +140,7 @@
           <textarea class="form-control" rows="5" id="protocol" disabled></textarea>
         </div>
         <button class="btn btn-primary" onclick="save('protocol')">Export</button>
-        <button class="btn btn-danger" onclick="clearProtocol()">Clear</button>
+        <button class="btn btn-danger" onclick="clearProtocol()" disabled>Clear</button>
       </div>
     </div>
     <button class="btn btn-secondary" onclick="$('#spoiler').toggle('slow')">Hide/Show Log</button>
@@ -153,7 +153,7 @@
           <small>For debugging only as experiment has to be double blind</small>
           </div>
           <button class="btn btn-primary" onclick="save('log')">Export</button>
-          <button class="btn btn-danger" onclick="clearLog()" id="clearLog">Clear</button>
+          <button class="btn btn-danger" onclick="clearLog()" id="clearLog" disabled>Clear</button>
       </div>
     </div>
   </div>
